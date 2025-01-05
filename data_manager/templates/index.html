@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golf Files</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Golf Files Repository</h1>
+        </header>
+        <main>
+            <ul class="file-list">
+                {% if files %}
+                    {% for file in files %}
+                        <li>
+                            <span class="file-name">{{ file.name }}</span>
+                            <a href="{% url 'download_file' file.name %}" class="btn-download">Download</a>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    <li class="no-files">No files available at the moment.</li>
+                {% endif %}
+            </ul>
+        </main>
+        <footer>
+            <p>&copy; 2025 Golf Data Archive. All Rights Reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
