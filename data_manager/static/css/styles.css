@@ -58,7 +58,12 @@ main {
     font-weight: 500;
 }
 
-.btn-download {
+.action-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-download, .btn-preview {
     text-decoration: none;
     color: #ffffff;
     background-color: #007bff;
@@ -67,10 +72,20 @@ main {
     font-size: 0.9rem;
     font-weight: bold;
     transition: background-color 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-preview {
+    background-color: #28a745;
 }
 
 .btn-download:hover {
     background-color: #0056b3;
+}
+
+.btn-preview:hover {
+    background-color: #218838;
 }
 
 .no-files {
@@ -78,6 +93,13 @@ main {
     font-style: italic;
     color: #888;
     padding: 15px 0;
+}
+
+.chart-container {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 600px;
+    display: none; /* Hide initially */
 }
 
 footer {
