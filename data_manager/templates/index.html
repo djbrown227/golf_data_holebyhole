@@ -7,6 +7,7 @@
     <title>Golf Files</title>
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -19,17 +20,79 @@
                     {% for file in files %}
                         <li>
                             <span class="file-name">{{ file.name }}</span>
-                            <a href="{% url 'download_file' file.name %}" class="btn-download">Download</a>
+                            <div class="action-buttons">
+                                <a href="{% url 'download_file' file.name %}" class="btn-download">Download</a>
+                                <button class="btn-preview" onclick="loadTopGolfers('{{ file.name }}')">Preview</button>
+                            </div>
                         </li>
                     {% endfor %}
                 {% else %}
                     <li class="no-files">No files available at the moment.</li>
                 {% endif %}
             </ul>
+
+            <!-- Section for displaying top 10 golfers -->
+            <h2>Top 10 Golfers at Round 4 Hole 18</h2>
+            <ul id="golferList">
+                <!-- Top 10 golfers will be listed here -->
+            </ul>
         </main>
+
         <footer>
             <p>&copy; 2025 Golf Data Archive. All Rights Reserved.</p>
         </footer>
     </div>
+
+    <script src="{% static 'js/chart.js' %}"></script>
+
+    <script>
+        // Function to load top golfers and their cumulative scores for Round 4, Hole 18
+        async function loadTopGolfers(fileName) {
+            try {
+                // Fetch data from the server
+                const response = await fetch(`/fetch_golf_data?file_name=${fileName}`);
+                
+                // Check if the response is successful (status 200)
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from the server');
+                }
+                
+                // Parse the JSON data
+                const data = await response.json();
+                
+                // Log the entire data for debugging purposes
+                console.log('Full Data:', data);
+
+                // Log top golfers
+                console.log('Top Golfers:', data.top_golfers);
+
+                // Check if the expected data is present
+                if (!data.top_golfers) {
+                    throw new Error('Missing required data fields');
+                }
+
+                // Extract the relevant golfers
+                const golfers = data.top_golfers;
+
+                // Check if data is valid
+                if (!Array.isArray(golfers) || golfers.length === 0) {
+                    throw new Error('Invalid data format');
+                }
+
+                // Generate HTML to display top 10 golfers and their cumulative scores at Round 4, Hole 18
+                const golferList = document.getElementById('golferList');
+                golferList.innerHTML = ''; // Clear any previous content
+
+                golfers.forEach(golfer => {
+                    const golferItem = document.createElement('li');
+                    golferItem.textContent = `${golfer.name} - Round 4, Hole 18 Score: ${golfer.score_round_4}`;
+                    golferList.appendChild(golferItem);
+                });
+            } catch (error) {
+                console.error('Error loading top golfers:', error);
+                alert('Failed to load top golfers. Please check the console for details.');
+            }
+        }
+    </script>
 </body>
 </html>
